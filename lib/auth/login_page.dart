@@ -53,9 +53,31 @@ class _LoginPageState extends State<LoginPage>
               const SizedBox(height: 8,),
               CustomTextFormFieldAuth(hint: 'Enter your password', controller: passwordController,),
               const SizedBox(height: 10,),
-              InkWell
+              GestureDetector
               (
-                onTap: (){},
+                onTap: () async
+                {
+                  
+                    if(emailController.text == '')
+                    {
+                      ShowSnackBar(context, 'Please enter your email first');
+                      return;
+                    }
+                    else
+                    {
+                      try
+                      {
+                        await FirebaseAuth.instance.sendPasswordResetEmail(email: emailController.text);
+                        ShowSnackBar(context, 'We send a reset password link to your email, you can reset your password there');
+                        return;
+                      }
+                      catch(e)
+                      {
+                        ShowSnackBar(context, 'Something went wrong!');
+                      }
+                    }
+                  
+                },
                 child: const Text('Forgot password?', textAlign: TextAlign.end, style: TextStyle(fontSize: 14),),
               ),
               const SizedBox(height: 16,),
