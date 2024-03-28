@@ -2,15 +2,17 @@ import 'package:flutter/material.dart';
 
 class CustomTextFormFieldAuth extends StatelessWidget 
 {
-  const CustomTextFormFieldAuth({super.key, required this.controller, this.hint});
+  const CustomTextFormFieldAuth({super.key, required this.controller,required this.hint, this.maxLines = 1});
   final TextEditingController controller;
-  final hint;
+  final String hint;
+  final int maxLines;
 
   @override
   Widget build(BuildContext context) 
   {
     return TextFormField
     (
+      maxLines: maxLines,
       validator: (val)
       {
         if(val == '')
