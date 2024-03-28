@@ -1,7 +1,9 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_course/auth/login_page.dart';
+import 'package:firebase_course/auth/verify_email_page.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
 import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/components/logo_auth.dart';
@@ -102,7 +104,9 @@ class _RegisterPageState extends State<RegisterPage>
         email: emailController.text,
         password: passwordController.text,
       );
-      Navigator.of(context).pushReplacementNamed(HomePage.id);
+      FirebaseAuth.instance.currentUser!.sendEmailVerification();
+      Navigator.of(context).pushNamed(LoginPage.id);
+      ShowSnackBar(context, 'verify your account by clicking the link we send to your account then login');
     } 
     on FirebaseAuthException catch (e) 
     {

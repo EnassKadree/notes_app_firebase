@@ -12,7 +12,7 @@ class CustomButtonAuth extends StatelessWidget
   {
     return MaterialButton
     (
-      padding: const EdgeInsets.symmetric(vertical: 16),
+      padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 32),
       onPressed: onPressed, 
       color: Colors.orange,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),

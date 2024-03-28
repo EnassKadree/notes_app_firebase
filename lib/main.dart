@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/login_page.dart';
 import 'package:firebase_course/auth/register_page.dart';
+import 'package:firebase_course/auth/verify_email_page.dart';
 import 'package:firebase_course/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -37,13 +38,14 @@ class MyApp extends StatelessWidget
     return MaterialApp
     (
       debugShowCheckedModeBanner: false,
-      home: FirebaseAuth.instance.currentUser == null ? const LoginPage() : const HomePage(),
+      home: (FirebaseAuth.instance.currentUser == null || !FirebaseAuth.instance.currentUser!.emailVerified) ? const LoginPage() : const HomePage(),
       theme: ThemeData(fontFamily: 'Poppins'),
       routes: 
       {
         LoginPage.id : (context) => const LoginPage(),
         RegisterPage.id : (context) => const RegisterPage(),
-        HomePage.id : (context) => const HomePage()
+        HomePage.id : (context) => const HomePage(),
+        VerifyEmailPage.id : (context) => const VerifyEmailPage()
       },
     );
   }

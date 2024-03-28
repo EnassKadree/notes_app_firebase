@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class LogoAuth extends StatelessWidget {
-  const LogoAuth({super.key});
+  const LogoAuth({super.key, this.size = 70});
+  final double size;
 
   @override
   Widget build(BuildContext context) {
@@ -10,8 +11,8 @@ class LogoAuth extends StatelessWidget {
               child: Container
               (
                 padding: const EdgeInsets.all(16),
-                height: 70,
-                width: 70,
+                height: size ,
+                width: size ,
                 decoration: BoxDecoration
                 (
                   color: Colors.grey[200],

@@ -9,6 +9,7 @@ import 'package:firebase_course/helper/snackbar.dart';
 import 'package:firebase_course/homepage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget 
 {
@@ -73,7 +74,11 @@ class _LoginPageState extends State<LoginPage>
               MaterialButton
               (
                 padding: const EdgeInsets.symmetric(vertical: 16),
-                onPressed: (){}, 
+                onPressed: () async
+                {
+                  await signInWithGoogle();
+                  Navigator.of(context).pushReplacementNamed(HomePage.id);
+                }, 
                 color: Colors.red[700],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
                 child: Row(
@@ -114,7 +119,10 @@ class _LoginPageState extends State<LoginPage>
         email: emailController.text,
         password: passwordController.text
       );
-      Navigator.of(context).pushReplacementNamed(HomePage.id);
+      if(FirebaseAuth.instance.currentUser!.emailVerified)
+      {
+        Navigator.of(context).pushReplacementNamed(HomePage.id);
+      }
     } 
     on FirebaseAuthException catch (e) 
     {
@@ -130,5 +138,27 @@ class _LoginPageState extends State<LoginPage>
         ShowSnackBar(context, 'Something went wrong! try again later');
       }
     }
+  }
+
+
+  Future signInWithGoogle() async 
+  {
+  // Trigger the authentication flow
+    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+    if(googleUser == null)
+    {return;}
+
+    // Obtain the auth details from the request
+    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+    // Create a new credential
+    final credential = GoogleAuthProvider.credential(
+      accessToken: googleAuth?.accessToken,
+      idToken: googleAuth?.idToken,
+    );
+
+    // Once signed in, return the UserCredential
+    return await FirebaseAuth.instance.signInWithCredential(credential);
   }
 }
