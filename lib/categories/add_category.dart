@@ -49,8 +49,9 @@ class _AddCategoryState extends State<AddCategory>
               CustomButtonAuth(title: 'Add', onPressed: () async
               {
                 isLoading = true;
+                setState(() { });
                 await addCategory();
-                Navigator.of(context).pushReplacementNamed(HomePage.id);
+                Navigator.of(context).pushNamedAndRemoveUntil(HomePage.id, (route) => false,);
               })
             ]
           ),
@@ -63,10 +64,10 @@ class _AddCategoryState extends State<AddCategory>
   {
     return categories
         .add({
-          'name': controller.text, // John Doe
+          'name': controller.text,
         })
-        .then((value) {isLoading = false; return ShowSnackBar(context, 'Category added successfully'); })
-        .catchError((error) { isLoading = false; return ShowSnackBar(context, 'Failed to add category');});
+        .then((value) {isLoading = false; setState(() { }); return ShowSnackBar(context, 'Category added successfully'); })
+        .catchError((error) { isLoading = false; setState(() { }); return ShowSnackBar(context, 'Failed to add category');});
   }
 
 }

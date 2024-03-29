@@ -67,6 +67,7 @@ class _RegisterPageState extends State<RegisterPage>
                 if(formKey.currentState!.validate())
                 {
                   isLoading = true;
+                  setState(() { });
                   await signUp(context);
                 }
               },),
@@ -101,6 +102,7 @@ class _RegisterPageState extends State<RegisterPage>
         password: passwordController.text,
       );
       isLoading = false;
+      setState(() { });
       FirebaseAuth.instance.currentUser!.sendEmailVerification();
       Navigator.of(context).pushNamed(LoginPage.id);
       ShowSnackBar(context, 'verify your account by clicking the link we send to your account then login');
@@ -108,6 +110,7 @@ class _RegisterPageState extends State<RegisterPage>
     on FirebaseAuthException catch (e) 
     {
       isLoading = false;
+      setState(() { });
       if (e.code == 'weak-password') 
       {
         ShowSnackBar(context, 'weak password, try something stronger');
@@ -122,6 +125,7 @@ class _RegisterPageState extends State<RegisterPage>
     } catch (e) 
     {
       isLoading = false;
+      setState(() { });
       ShowSnackBar(context, e.toString());
     }
   }

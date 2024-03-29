@@ -77,7 +77,6 @@ class _LoginPageState extends State<LoginPage>
                         ShowSnackBar(context, 'Something went wrong!');
                       }
                     }
-                  
                 },
                 child: const Text('Forgot password?', textAlign: TextAlign.end, style: TextStyle(fontSize: 14),),
               ),
@@ -90,6 +89,7 @@ class _LoginPageState extends State<LoginPage>
                   if(formKey.currentState!.validate())
                   {
                     isLoading = true;
+                    setState(() { });
                     await signIn(context);
                   }
                 },
@@ -101,8 +101,10 @@ class _LoginPageState extends State<LoginPage>
                 onPressed: () async
                 {
                   isLoading = true;
+                  setState(() { });
                   await signInWithGoogle();
                   isLoading = false;
+                  setState(() { });
                   Navigator.of(context).pushReplacementNamed(HomePage.id);
                 }, 
                 color: Colors.red[700],
@@ -149,12 +151,14 @@ class _LoginPageState extends State<LoginPage>
       if(FirebaseAuth.instance.currentUser!.emailVerified)
       {
         isLoading = false;
+        setState(() { });
         Navigator.of(context).pushReplacementNamed(HomePage.id);
       }
     } 
     on FirebaseAuthException catch (e) 
     {
       isLoading = false;
+      setState(() { });
       if (e.code == 'user-not-found') 
       {
         ShowSnackBar(context, 'No user found for that email.');
@@ -176,7 +180,7 @@ class _LoginPageState extends State<LoginPage>
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if(googleUser == null)
-    { isLoading = false; return; }
+    { isLoading = false; setState(() { }); return; }
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
