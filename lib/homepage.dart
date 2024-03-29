@@ -64,18 +64,47 @@ class _HomePageState extends State<HomePage>
           itemCount: data.length,
           itemBuilder: (context, index)
           {
-            return Card
+            return GestureDetector
             (
-              child: Padding
-              (
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: Column
+              onLongPress: () async
+              {
+                showDialog
                 (
-                  children: 
-                  [
-                    Image.asset('assets/images/folder.png', height: 100,), 
-                    Text(data[index]['name'], style: const TextStyle(fontSize: 18),)
-                  ],
+                  context: context, builder: (context)
+                  {
+                    return AlertDialog
+                    (
+                      title: const Text('Delete Item?', style: TextStyle(color: Colors.orange),),
+                      content: Text('Do you want to delete the category ${data[index]['name']}'),
+                      actions: 
+                      [
+                        TextButton
+                        (
+                          onPressed: () async
+                          {
+                            await FirebaseFirestore.instance.collection('categories').doc(data[index].id).delete();
+                            Navigator.of(context).pushReplacementNamed(HomePage.id);
+                          }, child: const Text('Delete', style: TextStyle(color: Colors.orange),)
+                        ),
+                        TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text('Cancel', style: TextStyle(color: Colors.grey[700]),)),
+                      ],
+                    );
+                  }
+                );
+              },
+              child: Card
+              (
+                child: Padding
+                (
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Column
+                  (
+                    children: 
+                    [
+                      Image.asset('assets/images/folder.png', height: 100,), 
+                      Text(data[index]['name'], style: const TextStyle(fontSize: 18),)
+                    ],
+                  ),
                 ),
               ),
             );
