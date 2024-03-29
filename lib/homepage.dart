@@ -47,42 +47,46 @@ class _HomePageState extends State<HomePage> {
           )
         ],
       ),
-      body: GridView
+      body: Padding
       (
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4/3, crossAxisSpacing: 5, mainAxisSpacing: 5), 
-        children: 
-        [
-          Card
-          (
-            child: Padding
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+        child: GridView
+        (
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4/3, crossAxisSpacing: 5, mainAxisSpacing: 5), 
+          children: 
+          [
+            Card
             (
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column
+              child: Padding
               (
-                children: 
-                [
-                  Image.asset('assets/images/folder.png', height: 100,), 
-                  const Text('Company', style: TextStyle(fontSize: 18),)
-                ],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column
+                (
+                  children: 
+                  [
+                    Image.asset('assets/images/folder.png', height: 100,), 
+                    const Text('Company', style: TextStyle(fontSize: 18),)
+                  ],
+                ),
               ),
             ),
-          ),
-          Card
-          (
-            child: Padding
+            Card
             (
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-              child: Column
+              child: Padding
               (
-                children: 
-                [
-                  Image.asset('assets/images/folder.png', height: 100,), 
-                  const Text('Company', style: TextStyle(fontSize: 18),)
-                ],
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Column
+                (
+                  children: 
+                  [
+                    Image.asset('assets/images/folder.png', height: 100,), 
+                    const Text('Company', style: TextStyle(fontSize: 18),)
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       )
     );
   }
