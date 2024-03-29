@@ -105,7 +105,6 @@ class _LoginPageState extends State<LoginPage>
                   await signInWithGoogle();
                   isLoading = false;
                   setState(() { });
-                  Navigator.of(context).pushReplacementNamed(HomePage.id);
                 }, 
                 color: Colors.red[700],
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
@@ -154,6 +153,12 @@ class _LoginPageState extends State<LoginPage>
         setState(() { });
         Navigator.of(context).pushReplacementNamed(HomePage.id);
       }
+      else
+      {
+        isLoading = false; 
+        setState((){});
+        ShowSnackBar(context, 'please verify your email first');
+      }
     } 
     on FirebaseAuthException catch (e) 
     {
@@ -176,22 +181,35 @@ class _LoginPageState extends State<LoginPage>
 
   Future signInWithGoogle() async 
   {
-  // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    try
+    {
+      // Trigger the authentication flow
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-    if(googleUser == null)
-    { isLoading = false; setState(() { }); return; }
+      if(googleUser == null)
+      { isLoading = false; setState(() { }); return; }
 
-    // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      // Obtain the auth details from the request
+      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
 
-    // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+      // Create a new credential
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth?.accessToken,
+        idToken: googleAuth?.idToken,
+      );
 
-    // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
+      // Once signed in, return the UserCredential
+      await FirebaseAuth.instance.signInWithCredential(credential);
+      Navigator.of(context).pushReplacementNamed(HomePage.id);
+    }
+    catch(e)
+    {
+      print('=======================================================================');
+      print(e);
+      print('=======================================================================');
+      isLoading = false;
+      ShowSnackBar(context, 'Something went wrong');
+      return;
+    }
   }
 }

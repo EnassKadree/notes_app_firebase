@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
 import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/helper/snackbar.dart';
@@ -64,6 +65,7 @@ class _AddCategoryState extends State<AddCategory>
   {
     return categories
         .add({
+          'u_id' : FirebaseAuth.instance.currentUser!.uid,
           'name': controller.text,
         })
         .then((value) {isLoading = false; setState(() { }); return ShowSnackBar(context, 'Category added successfully'); })

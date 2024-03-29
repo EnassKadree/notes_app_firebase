@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/login_page.dart';
@@ -47,7 +49,7 @@ class _HomePageState extends State<HomePage>
             onPressed: () async
             {
               await FirebaseAuth.instance.signOut();
-              GoogleSignIn().disconnect();
+              //? await GoogleSignIn().disconnect();
               Navigator.of(context).pushNamedAndRemoveUntil(LoginPage.id, (route) => false);
             },   
             icon:const Icon(Icons.exit_to_app_rounded)
@@ -116,7 +118,7 @@ class _HomePageState extends State<HomePage>
 
   getData() async
   {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('categories').get();
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('categories').where('u_id', isEqualTo: FirebaseAuth.instance.currentUser!.uid).get();
     data.addAll(querySnapshot.docs);
     isLoading = false;
     setState(() { });
