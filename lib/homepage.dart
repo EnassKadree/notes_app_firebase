@@ -17,6 +17,7 @@ class HomePage extends StatefulWidget
 class _HomePageState extends State<HomePage> 
 {
   List<QueryDocumentSnapshot> data = [];
+  bool isLoading = true;
 
   @override
   void initState() 
@@ -56,7 +57,8 @@ class _HomePageState extends State<HomePage>
       body: Padding
       (
         padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
-        child: GridView.builder
+        child: isLoading ? const Center(child: CircularProgressIndicator(color: Colors.orange,),) :
+        GridView.builder
         (
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4/3, crossAxisSpacing: 5, mainAxisSpacing: 5), 
           itemCount: data.length,
@@ -87,6 +89,7 @@ class _HomePageState extends State<HomePage>
   {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('categories').get();
     data.addAll(querySnapshot.docs);
+    isLoading = false;
     setState(() { });
   }
 }

@@ -18,6 +18,7 @@ class AddCategory extends StatefulWidget
 
 class _AddCategoryState extends State<AddCategory> 
 {
+  bool isLoading = false;
   final TextEditingController controller = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
 
@@ -32,7 +33,8 @@ class _AddCategoryState extends State<AddCategory>
       (
         title: const Text('Add category'),
       ),
-      body: Padding
+      body: isLoading? const Center(child: CircularProgressIndicator(color: Colors.orange,),): 
+      Padding
       (
         padding: const EdgeInsets.symmetric(vertical: 24, horizontal: 16),
         child: Form
@@ -46,8 +48,8 @@ class _AddCategoryState extends State<AddCategory>
               const SizedBox(height: 32,),
               CustomButtonAuth(title: 'Add', onPressed: () async
               {
+                isLoading = true;
                 await addCategory();
-                
                 Navigator.of(context).pushReplacementNamed(HomePage.id);
               })
             ]
@@ -59,12 +61,12 @@ class _AddCategoryState extends State<AddCategory>
 
   Future<void> addCategory() 
   {
-      return categories
-          .add({
-            'name': controller.text, // John Doe
-          })
-          .then((value) => ShowSnackBar(context, 'Category added successfully'))
-          .catchError((error) => ShowSnackBar(context, 'Failed to add category'));
-    }
+    return categories
+        .add({
+          'name': controller.text, // John Doe
+        })
+        .then((value) {isLoading = false; return ShowSnackBar(context, 'Category added successfully'); })
+        .catchError((error) { isLoading = false; return ShowSnackBar(context, 'Failed to add category');});
+  }
 
 }

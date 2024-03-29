@@ -3,7 +3,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_course/auth/login_page.dart';
-import 'package:firebase_course/auth/verify_email_page.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
 import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/components/logo_auth.dart';
@@ -23,6 +22,7 @@ class RegisterPage extends StatefulWidget
 
 class _RegisterPageState extends State<RegisterPage> 
 {
+  bool isLoading = false; 
   TextEditingController emailController = TextEditingController();
   TextEditingController usernameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -32,7 +32,8 @@ class _RegisterPageState extends State<RegisterPage>
   Widget build(BuildContext context) {
     return Scaffold
     (
-      body: Padding
+      body: isLoading? const Center(child: CircularProgressIndicator(color: Colors.orange,),): 
+      Padding
       (
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
         child: Form
@@ -60,16 +61,12 @@ class _RegisterPageState extends State<RegisterPage>
               const SizedBox(height: 8,),
               CustomTextFormFieldAuth(hint: 'Enter your password', controller: passwordController,),
               const SizedBox(height: 10,),
-              InkWell
-              (
-                onTap: (){},
-                child: const Text('Forgot password?', textAlign: TextAlign.end, style: TextStyle(fontSize: 14),),
-              ),
               const SizedBox(height: 16,),
               CustomButtonAuth(title: 'Register', onPressed: () async
               {
                 if(formKey.currentState!.validate())
                 {
+                  isLoading = true;
                   await signUp(context);
                 }
               },),
@@ -98,18 +95,19 @@ class _RegisterPageState extends State<RegisterPage>
   {
     try 
     {
-      
       final credential = await FirebaseAuth.instance.createUserWithEmailAndPassword
       (
         email: emailController.text,
         password: passwordController.text,
       );
+      isLoading = false;
       FirebaseAuth.instance.currentUser!.sendEmailVerification();
       Navigator.of(context).pushNamed(LoginPage.id);
       ShowSnackBar(context, 'verify your account by clicking the link we send to your account then login');
     } 
     on FirebaseAuthException catch (e) 
     {
+      isLoading = false;
       if (e.code == 'weak-password') 
       {
         ShowSnackBar(context, 'weak password, try something stronger');
@@ -123,6 +121,7 @@ class _RegisterPageState extends State<RegisterPage>
       }
     } catch (e) 
     {
+      isLoading = false;
       ShowSnackBar(context, e.toString());
     }
   }

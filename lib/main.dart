@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/login_page.dart';
 import 'package:firebase_course/auth/register_page.dart';
-import 'package:firebase_course/auth/verify_email_page.dart';
 import 'package:firebase_course/categories/add_category.dart';
 import 'package:firebase_course/homepage.dart';
 import 'package:flutter/material.dart';
@@ -56,7 +55,6 @@ class MyApp extends StatelessWidget
         LoginPage.id : (context) => const LoginPage(),
         RegisterPage.id : (context) => const RegisterPage(),
         HomePage.id : (context) => const HomePage(),
-        VerifyEmailPage.id : (context) => const VerifyEmailPage(),
         AddCategory.id : (context) => const AddCategory(),
       },
     );

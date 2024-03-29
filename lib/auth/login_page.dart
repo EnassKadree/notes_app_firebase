@@ -8,7 +8,6 @@ import 'package:firebase_course/components/logo_auth.dart';
 import 'package:firebase_course/helper/snackbar.dart';
 import 'package:firebase_course/homepage.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class LoginPage extends StatefulWidget 
@@ -22,6 +21,7 @@ class LoginPage extends StatefulWidget
 
 class _LoginPageState extends State<LoginPage> 
 {
+  bool isLoading = false;
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -32,7 +32,8 @@ class _LoginPageState extends State<LoginPage>
       body: Padding
       (
         padding: const EdgeInsets.symmetric(vertical: 32, horizontal: 16),
-        child: Form
+        child: isLoading? const Center(child: CircularProgressIndicator(color: Colors.orange,),) :
+        Form
         (
           key: formKey,
           child: ListView
@@ -88,6 +89,7 @@ class _LoginPageState extends State<LoginPage>
                 {
                   if(formKey.currentState!.validate())
                   {
+                    isLoading = true;
                     await signIn(context);
                   }
                 },
@@ -98,7 +100,9 @@ class _LoginPageState extends State<LoginPage>
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 onPressed: () async
                 {
+                  isLoading = true;
                   await signInWithGoogle();
+                  isLoading = false;
                   Navigator.of(context).pushReplacementNamed(HomePage.id);
                 }, 
                 color: Colors.red[700],
@@ -133,7 +137,8 @@ class _LoginPageState extends State<LoginPage>
     );
   }
 
-  Future<void> signIn(BuildContext context) async {
+  Future<void> signIn(BuildContext context) async 
+  {
     try 
     {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword
@@ -143,11 +148,13 @@ class _LoginPageState extends State<LoginPage>
       );
       if(FirebaseAuth.instance.currentUser!.emailVerified)
       {
+        isLoading = false;
         Navigator.of(context).pushReplacementNamed(HomePage.id);
       }
     } 
     on FirebaseAuthException catch (e) 
     {
+      isLoading = false;
       if (e.code == 'user-not-found') 
       {
         ShowSnackBar(context, 'No user found for that email.');
@@ -169,7 +176,7 @@ class _LoginPageState extends State<LoginPage>
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     if(googleUser == null)
-    {return;}
+    { isLoading = false; return; }
 
     // Obtain the auth details from the request
     final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
