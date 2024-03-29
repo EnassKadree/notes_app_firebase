@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
 import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/helper/snackbar.dart';
+import 'package:firebase_course/homepage.dart';
 import 'package:flutter/material.dart';
 
 class AddCategory extends StatefulWidget 
@@ -47,7 +48,7 @@ class _AddCategoryState extends State<AddCategory>
               {
                 await addCategory();
                 
-                Navigator.of(context).pop();
+                Navigator.of(context).pushReplacementNamed(HomePage.id);
               })
             ]
           ),
