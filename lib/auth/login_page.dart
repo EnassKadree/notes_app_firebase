@@ -1,4 +1,4 @@
-// ignore_for_file: use_build_context_synchronously
+// ignore_for_file: use_build_context_synchronously, unused_local_variable, unnecessary_nullable_for_final_variable_declarations
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/register_page.dart';
@@ -149,8 +149,6 @@ class _LoginPageState extends State<LoginPage>
       );
       if(FirebaseAuth.instance.currentUser!.emailVerified)
       {
-        isLoading = false;
-        setState(() { });
         Navigator.of(context).pushReplacementNamed(HomePage.id);
       }
       else
@@ -190,7 +188,7 @@ class _LoginPageState extends State<LoginPage>
       { isLoading = false; setState(() { }); return; }
 
       // Obtain the auth details from the request
-      final GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+      final GoogleSignInAuthentication? googleAuth = await googleUser.authentication;
 
       // Create a new credential
       final credential = GoogleAuthProvider.credential(
@@ -208,6 +206,7 @@ class _LoginPageState extends State<LoginPage>
       print(e);
       print('=======================================================================');
       isLoading = false;
+      setState(() { });
       ShowSnackBar(context, 'Something went wrong');
       return;
     }

@@ -4,8 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/login_page.dart';
 import 'package:firebase_course/categories/add_category.dart';
+import 'package:firebase_course/categories/edit_category.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class HomePage extends StatefulWidget
 {
@@ -76,8 +76,8 @@ class _HomePageState extends State<HomePage>
                   {
                     return AlertDialog
                     (
-                      title: const Text('Delete Item?', style: TextStyle(color: Colors.orange),),
-                      content: Text('Do you want to delete the category ${data[index]['name']}'),
+                      title: const Text('Category Options', style: TextStyle(color: Colors.orange),),
+                      content: const Text('What do you want to do?'),
                       actions: 
                       [
                         TextButton
@@ -88,7 +88,14 @@ class _HomePageState extends State<HomePage>
                             Navigator.of(context).pushReplacementNamed(HomePage.id);
                           }, child: const Text('Delete', style: TextStyle(color: Colors.orange),)
                         ),
-                        TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text('Cancel', style: TextStyle(color: Colors.grey[700]),)),
+                        TextButton
+                        (
+                          onPressed: () 
+                          {
+                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => EditCategory(name: data[index]['name'], categoryId: data[index].id)));
+                          }, child: const Text('Edit', style: TextStyle(color: Colors.brown),)
+                        ),
+                        //TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text('Cancel', style: TextStyle(color: Colors.grey[700]),)),
                       ],
                     );
                   }
