@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/auth/login_page.dart';
 import 'package:firebase_course/categories/add_category.dart';
 import 'package:firebase_course/categories/edit_category.dart';
+import 'package:firebase_course/notes/view_notes.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget
@@ -68,6 +69,11 @@ class _HomePageState extends State<HomePage>
           {
             return GestureDetector
             (
+              onTap: ()
+              {
+                Navigator.of(context).push
+                (MaterialPageRoute(builder: (context) => ViewNotes(category: data[index]['name'], categoryId: data[index].id)));
+              },
               onLongPress: () async
               {
                 showDialog

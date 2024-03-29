@@ -125,4 +125,13 @@ class _RegisterPageState extends State<RegisterPage>
       ShowSnackBar(context, e.toString());
     }
   }
+
+  @override
+  void dispose()
+  {
+    emailController.dispose();
+    passwordController.dispose();
+    usernameController.dispose();
+    super.dispose();
+  }
 }

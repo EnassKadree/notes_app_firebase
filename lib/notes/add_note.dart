@@ -1,29 +1,29 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
+import 'package:firebase_course/components/custom_text_field.dart';
 import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/helper/snackbar.dart';
-import 'package:firebase_course/homepage.dart';
+import 'package:firebase_course/notes/view_notes.dart';
 import 'package:flutter/material.dart';
 
-class AddCategory extends StatefulWidget 
+class AddNote extends StatefulWidget 
 {
-  const AddCategory({Key? key}) : super(key: key);
-  static const id = 'add category';
+  const AddNote({Key? key, required this.categoryId, required this.category}) : super(key: key);
+  final String categoryId;
+  final String category; 
 
   @override
-  State<AddCategory> createState() => _AddCategoryState();
+  State<AddNote> createState() => _AddNoteState();
 }
 
-class _AddCategoryState extends State<AddCategory> 
+class _AddNoteState extends State<AddNote> 
 {
   bool isLoading = false;
   final TextEditingController controller = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
 
-  CollectionReference categories = FirebaseFirestore.instance.collection('categories');
   
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class _AddCategoryState extends State<AddCategory>
     (
       appBar: AppBar
       (
-        title: const Text('Add category'),
+        title: const Text('Add Note'),
       ),
       body: isLoading? const Center(child: CircularProgressIndicator(color: Colors.orange,),): 
       Padding
@@ -45,14 +45,15 @@ class _AddCategoryState extends State<AddCategory>
           (
             children: 
             [
-              CustomTextFormFieldAuth(controller: controller, hint: 'Enter Category name',),
-              const SizedBox(height: 32,),
+              CustomTextFormFieldNote(controller: controller, hint: 'Take a note',),
+              const SizedBox(height: 16,),
               CustomButtonAuth(title: 'Add', onPressed: () async
               {
                 isLoading = true;
                 setState(() { });
-                await addCategory();
-                Navigator.of(context).pushNamedAndRemoveUntil(HomePage.id, (route) => false,);
+                await addNote();
+                Navigator.of(context).pushReplacement
+                (MaterialPageRoute(builder: (context) => ViewNotes(category: widget.category, categoryId: widget.categoryId)));
               })
             ]
           ),
@@ -61,15 +62,16 @@ class _AddCategoryState extends State<AddCategory>
     );
   }
 
-  Future<void> addCategory() 
+  Future<void> addNote() 
   {
-    return categories
+    CollectionReference notes = FirebaseFirestore.instance.collection('categories').doc(widget.categoryId).collection('notes');
+
+    return notes
         .add({
-          'u_id' : FirebaseAuth.instance.currentUser!.uid,
-          'name': controller.text,
+          'note': controller.text,
         })
-        .then((value) {isLoading = false; setState(() { }); return ShowSnackBar(context, 'Category added successfully'); })
-        .catchError((error) { isLoading = false; setState(() { }); return ShowSnackBar(context, 'Failed to add category');});
+        .then((value) {isLoading = false; setState(() { }); return ShowSnackBar(context, 'Note added successfully'); })
+        .catchError((error) { isLoading = false; setState(() { }); return ShowSnackBar(context, 'Failed to add note');});
   }
 
   @override

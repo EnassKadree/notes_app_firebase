@@ -2,19 +2,18 @@
 
 import 'package:flutter/material.dart';
 
-class CustomTextFormFieldAuth extends StatelessWidget 
+class CustomTextFormFieldNote extends StatelessWidget 
 {
-  const CustomTextFormFieldAuth({super.key, required this.controller,required this.hint, this.maxLines = 1, });
+  const CustomTextFormFieldNote({super.key, required this.controller,required this.hint});
   final TextEditingController controller;
   final String hint;
-  final int maxLines;
 
   @override
   Widget build(BuildContext context) 
   {
     return TextFormField
     (
-      maxLines: maxLines,
+      maxLines: 25,
       validator: (val)
       {
         if(val == '')
@@ -26,8 +25,7 @@ class CustomTextFormFieldAuth extends StatelessWidget
       decoration: InputDecoration
       (
         hintStyle: const TextStyle(fontSize: 14),
-        filled: true,
-        fillColor: Colors.grey[200],
+        filled: false,
         hintText: hint,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         border: buildOutLineBorder(),
@@ -41,7 +39,7 @@ class CustomTextFormFieldAuth extends StatelessWidget
   OutlineInputBorder buildOutLineBorder([color]) {
     return OutlineInputBorder 
       (
-        borderRadius: BorderRadius.circular(50), 
+        borderRadius: BorderRadius.circular(10), 
         borderSide: BorderSide(color: color ?? Colors.blueGrey, width: 1)
       );
   }

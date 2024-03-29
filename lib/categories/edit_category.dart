@@ -71,13 +71,20 @@ class _EditCategoryState extends State<EditCategory>
   {
     try
     {
-      await categories.doc(widget.categoryId).update({'name' : controller.text});
+      await categories.doc(widget.categoryId).set({'name' : controller.text}, SetOptions(merge: true));
       ShowSnackBar(context, 'Category updated successfully');
     }
     catch(e)
     {
       ShowSnackBar(context, 'Failed to update category');
     }
+  }
+
+  @override
+  void dispose()
+  {
+    controller.dispose();
+    super.dispose();
   }
 
 }
