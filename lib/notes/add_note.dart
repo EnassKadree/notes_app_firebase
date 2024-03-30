@@ -24,6 +24,7 @@ class AddNote extends StatefulWidget
 class _AddNoteState extends State<AddNote> 
 {
   bool isLoading = false;
+  bool isImageLoading = false;
   final TextEditingController controller = TextEditingController();
   GlobalKey<FormState> formstate = GlobalKey<FormState>();
 
@@ -51,7 +52,7 @@ class _AddNoteState extends State<AddNote>
           (
             children: 
             [
-              if(file != null) 
+              if(url != null) 
                 Container
                 (
                   width: double.infinity,
@@ -62,10 +63,11 @@ class _AddNoteState extends State<AddNote>
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(10)
                   ),
-                  child:ClipRRect
+                  child:isImageLoading? const Center(child: CircularProgressIndicator(color: Colors.orange,),) :
+                  ClipRRect
                   (
                     borderRadius: BorderRadius.circular(10),
-                    child: Image.file(file!, fit: BoxFit.cover,)
+                    child: Image.network(url!, fit: BoxFit.cover,)
                   ),
                 ),
               CustomTextFormFieldNote(controller: controller, hint: 'Take a note',),
@@ -115,16 +117,16 @@ class _AddNoteState extends State<AddNote>
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if(image != null)
     {
-
+      isImageLoading = true; 
+      setState(() { });
       var imageName = basename(image.path);
 
       file = File(image.path);
       var storageRef = FirebaseStorage.instance.ref(FirebaseAuth.instance.currentUser!.uid).child(imageName);
       await storageRef.putFile(file!);
       url = await storageRef.getDownloadURL();
-      print('======================================');
-      print(url);
-      print('======================================');
+
+      isImageLoading = false;
       setState(() { });
     }
   }

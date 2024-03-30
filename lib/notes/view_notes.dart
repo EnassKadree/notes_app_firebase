@@ -66,7 +66,8 @@ class _ViewNotesState extends State<ViewNotes>
                             category: widget.category, 
                             categoryId: widget.categoryId, 
                             note: snapshot.data!.docs[index]['note'], 
-                            noteId: snapshot.data!.docs[index].id
+                            noteId: snapshot.data!.docs[index].id,
+                            url: snapshot.data!.docs[index]['url']
                           )));
                     },
                     onLongPress: () async
@@ -113,15 +114,15 @@ class _ViewNotesState extends State<ViewNotes>
                           children: 
                           [
                             Flexible(child: Text(snapshot.data!.docs[index]['note'])),
-
                             if(snapshot.data!.docs[index]['url']  != 'none')
                               Flexible
                               (
                                 child: Container
                                 (
-                                  padding: const EdgeInsets.only(top: 10),
+                                  margin: const EdgeInsets.only(top: 10),
                                   decoration: BoxDecoration
                                   (
+                                    color: Colors.red,
                                     borderRadius: BorderRadius.circular(10)
                                   ),
                                   child: ClipRRect
@@ -131,8 +132,8 @@ class _ViewNotesState extends State<ViewNotes>
                                     (
                                       snapshot.data!.docs[index]['url'], 
                                       width: double.infinity, 
-                                      height: MediaQuery.of(context).size.width/2 * 4/5, 
-                                      fit: BoxFit.cover,),
+                                      fit: BoxFit.cover,
+                                    ),
                                   )
                                 ),
                               )
