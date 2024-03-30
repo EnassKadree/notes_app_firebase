@@ -2,9 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_course/components/custom_button_auth.dart';
 import 'package:firebase_course/components/custom_text_field.dart';
-import 'package:firebase_course/components/custom_text_field_auth.dart';
 import 'package:firebase_course/helper/snackbar.dart';
-import 'package:firebase_course/notes/view_notes.dart';
 import 'package:flutter/material.dart';
 
 class EditNote extends StatefulWidget 
@@ -61,8 +59,7 @@ class _EditNoteState extends State<EditNote>
                 isLoading = true;
                 setState(() { });
                 await editNote();
-                Navigator.of(context).pushReplacement
-                (MaterialPageRoute(builder: (context) => ViewNotes(category: widget.category, categoryId: widget.categoryId)));
+                Navigator.of(context).pop();
               })
             ]
           ),
