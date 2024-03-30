@@ -1,8 +1,12 @@
 // ignore_for_file: use_build_context_synchronously
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_course/helper/snackbar.dart';
 import 'package:firebase_course/notes/add_note.dart';
 import 'package:firebase_course/notes/edit_note.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class ViewNotes extends StatefulWidget
 {
@@ -46,7 +50,7 @@ class _ViewNotesState extends State<ViewNotes>
             {
               return GridView.builder
               (
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4/3, crossAxisSpacing: 5, mainAxisSpacing: 5), 
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, childAspectRatio: 4/5, crossAxisSpacing: 5, mainAxisSpacing: 5), 
                 itemCount: snapshot.data!.docs.length,
                 itemBuilder: (context, index)
                 {
@@ -81,12 +85,17 @@ class _ViewNotesState extends State<ViewNotes>
                               (
                                 onPressed: () async
                                 {
+                                  if(snapshot.data!.docs[index]['url'] != 'none')
+                                  {
+                                    FirebaseStorage.instance.refFromURL(snapshot.data!.docs[index]['url']).delete();
+                                  }
                                   FirebaseFirestore.instance.collection('categories')
                                     .doc(widget.categoryId).collection('notes')
                                       .doc(snapshot.data!.docs[index].id).delete();
-                                  Navigator.of(context).pushReplacement
-                                  (MaterialPageRoute(builder: (context) => ViewNotes(category: widget.category, categoryId: widget.categoryId)));
-                                }, child: const Text('Delete', style: TextStyle(color: Colors.orange),)
+                                  Navigator.of(context).pop();
+                                  ShowSnackBar(context, 'Note deleted successfully');
+                                }, 
+                                child: const Text('Delete', style: TextStyle(color: Colors.orange),)
                               ),
                               TextButton(onPressed: (){Navigator.of(context).pop();}, child: Text('Cancel', style: TextStyle(color: Colors.grey[700]),)),
                             ],
@@ -98,8 +107,37 @@ class _ViewNotesState extends State<ViewNotes>
                     (
                       child: Padding
                       (
-                        padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16),
-                        child: Text(snapshot.data!.docs[index]['note'])
+                        padding: const EdgeInsets.all(16),
+                        child: Column
+                        (
+                          children: 
+                          [
+                            Flexible(child: Text(snapshot.data!.docs[index]['note'])),
+
+                            if(snapshot.data!.docs[index]['url']  != 'none')
+                              Flexible
+                              (
+                                child: Container
+                                (
+                                  padding: const EdgeInsets.only(top: 10),
+                                  decoration: BoxDecoration
+                                  (
+                                    borderRadius: BorderRadius.circular(10)
+                                  ),
+                                  child: ClipRRect
+                                  (
+                                    borderRadius: BorderRadius.circular(10),
+                                    child: Image.network
+                                    (
+                                      snapshot.data!.docs[index]['url'], 
+                                      width: double.infinity, 
+                                      height: MediaQuery.of(context).size.width/2 * 4/5, 
+                                      fit: BoxFit.cover,),
+                                  )
+                                ),
+                              )
+                          ],
+                        )
                       ),
                     ),
                   );
